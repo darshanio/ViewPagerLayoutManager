@@ -59,22 +59,30 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
     public void setItemSpace(int itemSpace) {
         assertNotInLayoutOrScroll(null);
-        if (this.itemSpace == itemSpace) return;
+        if (this.itemSpace == itemSpace) {
+            return;
+        }
         this.itemSpace = itemSpace;
         removeAllViews();
     }
 
     public void setMinScale(float minScale) {
         assertNotInLayoutOrScroll(null);
-        if (minScale > 1f) minScale = 1f;
-        if (this.minScale == minScale) return;
+        if (minScale > 1f) {
+            minScale = 1f;
+        }
+        if (this.minScale == minScale) {
+            return;
+        }
         this.minScale = minScale;
         requestLayout();
     }
 
     public void setMoveSpeed(float moveSpeed) {
         assertNotInLayoutOrScroll(null);
-        if (this.moveSpeed == moveSpeed) return;
+        if (this.moveSpeed == moveSpeed) {
+            return;
+        }
         this.moveSpeed = moveSpeed;
     }
 
@@ -92,7 +100,9 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float getDistanceRatio() {
-        if (moveSpeed == 0) return Float.MAX_VALUE;
+        if (moveSpeed == 0) {
+            return Float.MAX_VALUE;
+        }
         return 1 / moveSpeed;
     }
 

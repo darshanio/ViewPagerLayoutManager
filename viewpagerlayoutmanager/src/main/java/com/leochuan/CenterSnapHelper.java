@@ -1,10 +1,10 @@
 package com.leochuan;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Class intended to support snapping for a {@link RecyclerView}
@@ -105,7 +105,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
     }
 
     /**
-     * Please attach after {{@link LayoutManager} is setting}
+     * Please attach after {{@link androidx.recyclerview.widget.RecyclerView.LayoutManager} is setting}
      * Attaches the {@link CenterSnapHelper} to the provided RecyclerView, by calling
      * {@link RecyclerView#setOnFlingListener(RecyclerView.OnFlingListener)}.
      * You can call this method with {@code null} to detach it from the current RecyclerView.
@@ -126,7 +126,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
         }
         mRecyclerView = recyclerView;
         if (mRecyclerView != null) {
-            final LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+            final RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
             if (!(layoutManager instanceof ViewPagerLayoutManager)) return;
 
             setupCallbacks();
@@ -143,17 +143,19 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
         final int delta = layoutManager.getOffsetToCenter();
         if (delta != 0) {
             if (layoutManager.getOrientation()
-                    == ViewPagerLayoutManager.VERTICAL)
+                    == ViewPagerLayoutManager.VERTICAL) {
                 mRecyclerView.smoothScrollBy(0, delta);
-            else
+            } else {
                 mRecyclerView.smoothScrollBy(delta, 0);
+            }
         } else {
             // set it false to make smoothScrollToPosition keep trigger the listener
             snapToCenter = false;
         }
 
-        if (listener != null)
+        if (listener != null) {
             listener.onPageSelected(layoutManager.getCurrentPosition());
+        }
     }
 
     /**

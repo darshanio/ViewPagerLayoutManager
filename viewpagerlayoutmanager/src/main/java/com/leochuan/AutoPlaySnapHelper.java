@@ -2,10 +2,11 @@ package com.leochuan;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -43,7 +44,9 @@ class AutoPlaySnapHelper extends CenterSnapHelper {
         mRecyclerView = recyclerView;
         if (mRecyclerView != null) {
             final RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
-            if (!(layoutManager instanceof ViewPagerLayoutManager)) return;
+            if (!(layoutManager instanceof ViewPagerLayoutManager)) {
+                return;
+            }
 
             setupCallbacks();
             mGravityScroller = new Scroller(mRecyclerView.getContext(),
@@ -104,12 +107,14 @@ class AutoPlaySnapHelper extends CenterSnapHelper {
     }
 
     private void checkDirection(int direction) {
-        if (direction != LEFT && direction != RIGHT)
+        if (direction != LEFT && direction != RIGHT) {
             throw new IllegalArgumentException("direction should be one of left or right");
+        }
     }
 
     private void checkTimeInterval(int timeInterval) {
-        if (timeInterval <= 0)
+        if (timeInterval <= 0) {
             throw new IllegalArgumentException("time interval should greater than 0");
+        }
     }
 }

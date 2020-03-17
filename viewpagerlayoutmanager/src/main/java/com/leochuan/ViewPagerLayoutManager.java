@@ -3,16 +3,18 @@ package com.leochuan;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
-import static android.support.v7.widget.RecyclerView.NO_POSITION;
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
+
 
 /**
  * An implementation of {@link RecyclerView.LayoutManager} which behaves like view pager.
@@ -60,7 +62,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * Many calculations are made depending on orientation. To keep it clean, this interface
      * helps {@link LinearLayoutManager} make those decisions.
      * Based on {@link #mOrientation}, an implementation is lazily created in
-     * {@link #ensureLayoutState} method.
+     * {@link ViewPagerLayoutManager#ensureLayoutState()} method.
      */
     protected OrientationHelper mOrientationHelper;
 
@@ -166,6 +168,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * @return true if LayoutManager will recycle its children when it is detached from
      * RecyclerView.
      */
+    @Override
     public boolean getRecycleChildrenOnDetach() {
         return mRecycleChildrenOnDetach;
     }
@@ -183,6 +186,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      *
      * @param recycleChildrenOnDetach Whether children should be recycled in detach or not.
      */
+    @Override
     public void setRecycleChildrenOnDetach(boolean recycleChildrenOnDetach) {
         mRecycleChildrenOnDetach = recycleChildrenOnDetach;
     }
@@ -238,6 +242,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * @return Current orientation,  either {@link #HORIZONTAL} or {@link #VERTICAL}
      * @see #setOrientation(int)
      */
+    @Override
     public int getOrientation() {
         return mOrientation;
     }
@@ -248,6 +253,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      *
      * @param orientation {@link #HORIZONTAL} or {@link #VERTICAL}
      */
+    @Override
     public void setOrientation(int orientation) {
         if (orientation != HORIZONTAL && orientation != VERTICAL) {
             throw new IllegalArgumentException("invalid orientation:" + orientation);
@@ -305,6 +311,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * @return If layout is reversed or not.
      * @see #setReverseLayout(boolean)
      */
+    @Override
     public boolean getReverseLayout() {
         return mReverseLayout;
     }
@@ -315,10 +322,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * laid out at the end of the UI, second item is laid out before it etc.
      * <p>
      * For horizontal layouts, it depends on the layout direction.
-     * When set to true, If {@link android.support.v7.widget.RecyclerView} is LTR, than it will
-     * layout from RTL, if {@link android.support.v7.widget.RecyclerView}} is RTL, it will layout
+     * When set to true, If {@link RecyclerView} is LTR, than it will
+     * layout from RTL, if {@link RecyclerView}} is RTL, it will layout
      * from LTR.
      */
+    @Override
     public void setReverseLayout(boolean reverseLayout) {
         assertNotInLayoutOrScroll(null);
         if (reverseLayout == mReverseLayout) {
@@ -889,6 +897,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * @param enabled Whether or not to enable smooth scrollbar.
      * @see #setSmoothScrollbarEnabled(boolean)
      */
+    @Override
     public void setSmoothScrollbarEnabled(boolean enabled) {
         mSmoothScrollbarEnabled = enabled;
     }

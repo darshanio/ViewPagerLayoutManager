@@ -2,10 +2,11 @@ package com.leochuan;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * An implement of {@link RecyclerView} which support auto play.
@@ -44,6 +45,8 @@ public class AutoPlayRecyclerView extends RecyclerView {
                 if (autoPlaySnapHelper != null) {
                     autoPlaySnapHelper.start();
                 }
+            default:
+                break;
         }
         return result;
     }
