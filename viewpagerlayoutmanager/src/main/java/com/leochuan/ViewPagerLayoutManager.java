@@ -405,7 +405,12 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
         mInterval = getInterval();
         setUpOnLayout();
-        if (mInterval == 0) {
+
+        if ((getOrientation() == VERTICAL && mInterval == getHeight() - getPaddingTop() - getPaddingBottom()) ||
+                (getOrientation() == HORIZONTAL && mInterval == getWidth() - getPaddingLeft() - getPaddingRight())) {
+            mLeftItems = 0;
+            mRightItems = 0;
+        } else if (mInterval == 0) {
             mLeftItems = 1;
             mRightItems = 1;
         } else {
@@ -692,13 +697,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                 end = itemCount;
             }
         }
-
-//        for (int i = 0; i < start; i++) {
-//            removeAndRecycleView(recycler, i);
-//        }
-//        for (int i = end; i < itemCount; i++) {
-//            removeAndRecycleView(recycler, i);
-//        }
 
         float lastOrderWeight = Float.MIN_VALUE;
         for (int i = start; i < end; i++) {
