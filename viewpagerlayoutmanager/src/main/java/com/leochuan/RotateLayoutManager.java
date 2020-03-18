@@ -50,23 +50,15 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
         return itemSpace;
     }
 
-    public float getAngle() {
-        return angle;
-    }
-
-    public float getMoveSpeed() {
-        return moveSpeed;
-    }
-
-    public boolean getReverseRotate() {
-        return reverseRotate;
-    }
-
     public void setItemSpace(int itemSpace) {
         assertNotInLayoutOrScroll(null);
         if (this.itemSpace == itemSpace) return;
         this.itemSpace = itemSpace;
         removeAllViews();
+    }
+
+    public float getAngle() {
+        return angle;
     }
 
     public void setAngle(float centerScale) {
@@ -76,10 +68,18 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
         requestLayout();
     }
 
+    public float getMoveSpeed() {
+        return moveSpeed;
+    }
+
     public void setMoveSpeed(float moveSpeed) {
         assertNotInLayoutOrScroll(null);
         if (this.moveSpeed == moveSpeed) return;
         this.moveSpeed = moveSpeed;
+    }
+
+    public boolean getReverseRotate() {
+        return reverseRotate;
     }
 
     public void setReverseRotate(boolean reverseRotate) {
@@ -90,7 +90,7 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected float setInterval() {
+    protected float getInterval() {
         return mDecoratedMeasurement + itemSpace;
     }
 
@@ -111,9 +111,8 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     }
 
     public static class Builder {
-        private static float INTERVAL_ANGLE = 360f;
         private static final float DEFAULT_SPEED = 1f;
-
+        private static float INTERVAL_ANGLE = 360f;
         private int itemSpace;
         private int orientation;
         private float angle;

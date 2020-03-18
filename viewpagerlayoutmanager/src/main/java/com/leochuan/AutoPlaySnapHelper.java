@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * Used by {@link AutoPlayRecyclerView} to implement auto play effect
  */
 
-class AutoPlaySnapHelper extends CenterSnapHelper {
+public class AutoPlaySnapHelper extends CenterSnapHelper {
     final static int TIME_INTERVAL = 2000;
 
     final static int LEFT = 1;
@@ -25,7 +25,7 @@ class AutoPlaySnapHelper extends CenterSnapHelper {
     private boolean runnableAdded;
     private int direction;
 
-    AutoPlaySnapHelper(int timeInterval, int direction) {
+    public AutoPlaySnapHelper(int timeInterval, int direction) {
         checkTimeInterval(timeInterval);
         checkDirection(direction);
         handler = new Handler(Looper.getMainLooper());
@@ -74,7 +74,7 @@ class AutoPlaySnapHelper extends CenterSnapHelper {
     }
 
     @Override
-    void destroyCallbacks() {
+    protected void destroyCallbacks() {
         super.destroyCallbacks();
         if (runnableAdded) {
             handler.removeCallbacks(autoPlayRunnable);
@@ -82,37 +82,37 @@ class AutoPlaySnapHelper extends CenterSnapHelper {
         }
     }
 
-    void pause() {
+    public void pause() {
         if (runnableAdded) {
             handler.removeCallbacks(autoPlayRunnable);
             runnableAdded = false;
         }
     }
 
-    void start() {
+    public void start() {
         if (!runnableAdded) {
             handler.postDelayed(autoPlayRunnable, timeInterval);
             runnableAdded = true;
         }
     }
 
-    void setTimeInterval(int timeInterval) {
+    public void setTimeInterval(int timeInterval) {
         checkTimeInterval(timeInterval);
         this.timeInterval = timeInterval;
     }
 
-    void setDirection(int direction) {
+    public void setDirection(int direction) {
         checkDirection(direction);
         this.direction = direction;
     }
 
-    private void checkDirection(int direction) {
+    protected void checkDirection(int direction) {
         if (direction != LEFT && direction != RIGHT) {
             throw new IllegalArgumentException("direction should be one of left or right");
         }
     }
 
-    private void checkTimeInterval(int timeInterval) {
+    protected void checkTimeInterval(int timeInterval) {
         if (timeInterval <= 0) {
             throw new IllegalArgumentException("time interval should greater than 0");
         }

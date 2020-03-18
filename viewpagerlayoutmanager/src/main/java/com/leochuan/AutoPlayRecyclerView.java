@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class AutoPlayRecyclerView extends RecyclerView {
-    private AutoPlaySnapHelper autoPlaySnapHelper;
+    public AutoPlaySnapHelper autoPlaySnapHelper;
 
     public AutoPlayRecyclerView(Context context) {
         this(context, null);

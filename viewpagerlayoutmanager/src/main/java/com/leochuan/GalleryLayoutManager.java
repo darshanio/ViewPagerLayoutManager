@@ -57,82 +57,100 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         return itemSpace;
     }
 
+    public void setItemSpace(int itemSpace) {
+        assertNotInLayoutOrScroll(null);
+        if (this.itemSpace == itemSpace) {
+            return;
+        }
+        this.itemSpace = itemSpace;
+        removeAllViews();
+    }
+
     public float getMaxAlpha() {
         return maxAlpha;
+    }
+
+    public void setMaxAlpha(float maxAlpha) {
+        assertNotInLayoutOrScroll(null);
+        if (maxAlpha > 1) {
+            maxAlpha = 1;
+        }
+        if (this.maxAlpha == maxAlpha) {
+            return;
+        }
+        this.maxAlpha = maxAlpha;
+        requestLayout();
     }
 
     public float getMinAlpha() {
         return minAlpha;
     }
 
+    public void setMinAlpha(float minAlpha) {
+        assertNotInLayoutOrScroll(null);
+        if (minAlpha < 0) {
+            minAlpha = 0;
+        }
+        if (this.minAlpha == minAlpha) {
+            return;
+        }
+        this.minAlpha = minAlpha;
+        requestLayout();
+    }
+
     public float getAngle() {
         return angle;
+    }
+
+    public void setAngle(float angle) {
+        assertNotInLayoutOrScroll(null);
+        if (this.angle == angle) {
+            return;
+        }
+        this.angle = angle;
+        requestLayout();
     }
 
     public float getMoveSpeed() {
         return moveSpeed;
     }
 
+    public void setMoveSpeed(float moveSpeed) {
+        assertNotInLayoutOrScroll(null);
+        if (this.moveSpeed == moveSpeed) {
+            return;
+        }
+        this.moveSpeed = moveSpeed;
+    }
+
     public boolean getFlipRotate() {
         return flipRotate;
+    }
+
+    public void setFlipRotate(boolean flipRotate) {
+        assertNotInLayoutOrScroll(null);
+        if (this.flipRotate == flipRotate) {
+            return;
+        }
+        this.flipRotate = flipRotate;
+        requestLayout();
     }
 
     public boolean getRotateFromEdge() {
         return rotateFromEdge;
     }
 
-    public void setItemSpace(int itemSpace) {
-        assertNotInLayoutOrScroll(null);
-        if (this.itemSpace == itemSpace) return;
-        this.itemSpace = itemSpace;
-        removeAllViews();
-    }
-
-    public void setMoveSpeed(float moveSpeed) {
-        assertNotInLayoutOrScroll(null);
-        if (this.moveSpeed == moveSpeed) return;
-        this.moveSpeed = moveSpeed;
-    }
-
-    public void setMaxAlpha(float maxAlpha) {
-        assertNotInLayoutOrScroll(null);
-        if (maxAlpha > 1) maxAlpha = 1;
-        if (this.maxAlpha == maxAlpha) return;
-        this.maxAlpha = maxAlpha;
-        requestLayout();
-    }
-
-    public void setMinAlpha(float minAlpha) {
-        assertNotInLayoutOrScroll(null);
-        if (minAlpha < 0) minAlpha = 0;
-        if (this.minAlpha == minAlpha) return;
-        this.minAlpha = minAlpha;
-        requestLayout();
-    }
-
-    public void setAngle(float angle) {
-        assertNotInLayoutOrScroll(null);
-        if (this.angle == angle) return;
-        this.angle = angle;
-        requestLayout();
-    }
-
-    public void setFlipRotate(boolean flipRotate) {
-        assertNotInLayoutOrScroll(null);
-        if (this.flipRotate == flipRotate) return;
-        this.flipRotate = flipRotate;
-        requestLayout();
-    }
-
     public void setRotateFromEdge(boolean rotateFromEdge) {
         assertNotInLayoutOrScroll(null);
-        if (this.rotateFromEdge == rotateFromEdge) return;
+        if (this.rotateFromEdge == rotateFromEdge) {
+            return;
+        }
         this.rotateFromEdge = rotateFromEdge;
         removeAllViews();
     }
 
     @Override
-    protected float setInterval() {
+    protected float getInterval() {
         return mDecoratedMeasurement + itemSpace;
     }
 
@@ -153,7 +171,6 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
             if (rotateFromEdge) {
                 itemView.setPivotY(rotation > 0 ? 0 : mDecoratedMeasurement);
                 itemView.setPivotX(mDecoratedMeasurementInOther * 0.5f);
-
             }
             if (flipRotate) {
                 itemView.setRotationY(-rotation);
@@ -166,14 +183,16 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected float setViewElevation(View itemView, float targetOffset) {
+    protected float getViewElevation(View itemView, float targetOffset) {
         final float ele = Math.max(Math.abs(itemView.getRotationX()), Math.abs(itemView.getRotationY())) * MAX_ELEVATION / 360;
         return MAX_ELEVATION - ele;
     }
 
     @Override
     protected float getDistanceRatio() {
-        if (moveSpeed == 0) return Float.MAX_VALUE;
+        if (moveSpeed == 0) {
+            return Float.MAX_VALUE;
+        }
         return 1 / moveSpeed;
     }
 
@@ -184,13 +203,15 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     private float calAlpha(float targetOffset) {
         final float offset = Math.abs(targetOffset);
         float alpha = (minAlpha - maxAlpha) / mInterval * offset + maxAlpha;
-        if (offset >= mInterval) alpha = minAlpha;
+        if (offset >= mInterval) {
+            alpha = minAlpha;
+        }
         return alpha;
     }
 
     public static class Builder {
-        private static float INTERVAL_ANGLE = 30f;
         private static final float DEFAULT_SPEED = 1f;
+        private static float INTERVAL_ANGLE = 30f;
         private static float MIN_ALPHA = 0.5f;
         private static float MAX_ALPHA = 1f;
 
@@ -238,13 +259,17 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         }
 
         public Builder setMaxAlpha(float maxAlpha) {
-            if (maxAlpha > 1) maxAlpha = 1;
+            if (maxAlpha > 1) {
+                maxAlpha = 1;
+            }
             this.maxAlpha = maxAlpha;
             return this;
         }
 
         public Builder setMinAlpha(float minAlpha) {
-            if (minAlpha < 0) minAlpha = 0;
+            if (minAlpha < 0) {
+                minAlpha = 0;
+            }
             this.minAlpha = minAlpha;
             return this;
         }

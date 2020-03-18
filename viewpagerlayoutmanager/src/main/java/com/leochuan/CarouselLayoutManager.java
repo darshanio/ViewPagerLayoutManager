@@ -87,7 +87,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected float setInterval() {
+    protected float getInterval() {
         return (mDecoratedMeasurement - itemSpace);
     }
 
@@ -107,7 +107,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected float setViewElevation(View itemView, float targetOffset) {
+    protected float getViewElevation(View itemView, float targetOffset) {
         return itemView.getScaleX() * 5;
     }
 

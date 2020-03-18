@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.leochuan.CenterSnapHelper;
+import com.leochuan.CircleLayoutManager;
 import com.leochuan.CircleScaleLayoutManager;
 
 import rouchuan.viewpagerlayoutmanager.R;
@@ -96,28 +97,28 @@ public class CircleScalePopUpWindow extends SettingPopUpWindow
         flipRotate.setOnCheckedChangeListener(this);
 
         switch (circleScaleLayoutManager.getGravity()) {
-            case CircleScaleLayoutManager.LEFT:
+            case CircleLayoutManager.LEFT:
                 gravity.check(R.id.rb_left);
                 break;
-            case CircleScaleLayoutManager.RIGHT:
+            case CircleLayoutManager.RIGHT:
                 gravity.check(R.id.rb_right);
                 break;
-            case CircleScaleLayoutManager.TOP:
+            case CircleLayoutManager.TOP:
                 gravity.check(R.id.rb_top);
                 break;
-            case CircleScaleLayoutManager.BOTTOM:
+            case CircleLayoutManager.BOTTOM:
                 gravity.check(R.id.rb_bottom);
                 break;
         }
 
         switch (circleScaleLayoutManager.getZAlignment()) {
-            case CircleScaleLayoutManager.LEFT_ON_TOP:
+            case CircleLayoutManager.LEFT_ON_TOP:
                 zAlignment.check(R.id.rb_left_on_top);
                 break;
-            case CircleScaleLayoutManager.RIGHT_ON_TOP:
+            case CircleLayoutManager.RIGHT_ON_TOP:
                 zAlignment.check(R.id.rb_right_on_top);
                 break;
-            case CircleScaleLayoutManager.CENTER_ON_TOP:
+            case CircleLayoutManager.CENTER_ON_TOP:
                 zAlignment.check(R.id.rb_center_on_top);
                 break;
         }
@@ -191,25 +192,25 @@ public class CircleScalePopUpWindow extends SettingPopUpWindow
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.rb_left:
-                circleScaleLayoutManager.setGravity(CircleScaleLayoutManager.LEFT);
+                circleScaleLayoutManager.setGravity(CircleLayoutManager.LEFT);
                 break;
             case R.id.rb_right:
-                circleScaleLayoutManager.setGravity(CircleScaleLayoutManager.RIGHT);
+                circleScaleLayoutManager.setGravity(CircleLayoutManager.RIGHT);
                 break;
             case R.id.rb_top:
-                circleScaleLayoutManager.setGravity(CircleScaleLayoutManager.TOP);
+                circleScaleLayoutManager.setGravity(CircleLayoutManager.TOP);
                 break;
             case R.id.rb_bottom:
-                circleScaleLayoutManager.setGravity(CircleScaleLayoutManager.BOTTOM);
+                circleScaleLayoutManager.setGravity(CircleLayoutManager.BOTTOM);
                 break;
             case R.id.rb_left_on_top:
-                circleScaleLayoutManager.setZAlignment(CircleScaleLayoutManager.LEFT_ON_TOP);
+                circleScaleLayoutManager.setZAlignment(CircleLayoutManager.LEFT_ON_TOP);
                 break;
             case R.id.rb_right_on_top:
-                circleScaleLayoutManager.setZAlignment(CircleScaleLayoutManager.RIGHT_ON_TOP);
+                circleScaleLayoutManager.setZAlignment(CircleLayoutManager.RIGHT_ON_TOP);
                 break;
             case R.id.rb_center_on_top:
-                circleScaleLayoutManager.setZAlignment(CircleScaleLayoutManager.CENTER_ON_TOP);
+                circleScaleLayoutManager.setZAlignment(CircleLayoutManager.CENTER_ON_TOP);
                 break;
         }
     }

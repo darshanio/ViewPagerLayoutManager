@@ -3,59 +3,65 @@ package com.leochuan;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Class intended to support snapping for a {@link RecyclerView}
- * which use {@link ViewPagerLayoutManager} as its {@link LayoutManager}.
+ * which use {@link ViewPagerLayoutManager} as its {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}.
  * <p>
  * The implementation will snap the center of the target child view to the center of
  * the attached {@link RecyclerView}.
  */
 public class CenterSnapHelper extends RecyclerView.OnFlingListener {
 
-    RecyclerView mRecyclerView;
-    Scroller mGravityScroller;
+    protected RecyclerView mRecyclerView;
+    protected Scroller mGravityScroller;
 
     /**
      * when the dataSet is extremely large
      * {@link #snapToCenterView(ViewPagerLayoutManager, ViewPagerLayoutManager.OnPageChangeListener)}
      * may keep calling itself because the accuracy of float
      */
-    private boolean snapToCenter = false;
+    protected boolean snapToCenter = false;
+
+    protected boolean mScrolled = false;
 
     // Handles the snap on scroll case.
-    private final RecyclerView.OnScrollListener mScrollListener =
+    protected final RecyclerView.OnScrollListener mScrollListener =
             new RecyclerView.OnScrollListener() {
 
-                boolean mScrolled = false;
-
                 @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
 
-                    final ViewPagerLayoutManager layoutManager =
-                            (ViewPagerLayoutManager) recyclerView.getLayoutManager();
-                    final ViewPagerLayoutManager.OnPageChangeListener onPageChangeListener =
-                            layoutManager.onPageChangeListener;
-                    if (onPageChangeListener != null) {
-                        onPageChangeListener.onPageScrollStateChanged(newState);
-                    }
+                    RecyclerView.LayoutManager viewLayoutManager = recyclerView.getLayoutManager();
 
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE && mScrolled) {
-                        mScrolled = false;
-                        if (!snapToCenter) {
-                            snapToCenter = true;
-                            snapToCenterView(layoutManager, onPageChangeListener);
-                        } else {
-                            snapToCenter = false;
+                    if (viewLayoutManager instanceof ViewPagerLayoutManager) {
+                        final ViewPagerLayoutManager layoutManager = (ViewPagerLayoutManager) viewLayoutManager;
+                        final ViewPagerLayoutManager.OnPageChangeListener onPageChangeListener =
+                                layoutManager.onPageChangeListener;
+                        if (onPageChangeListener != null) {
+                            onPageChangeListener.onPageScrollStateChanged(newState);
+                        }
+
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE && mScrolled) {
+                            mScrolled = false;
+                            if (!snapToCenter) {
+                                snapToCenter = true;
+                                snapToCenterView(layoutManager, onPageChangeListener);
+                            } else {
+                                snapToCenter = false;
+                            }
                         }
                     }
+
+
                 }
 
                 @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                     if (dx != 0 || dy != 0) {
                         mScrolled = true;
                     }
@@ -64,10 +70,14 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
 
     @Override
     public boolean onFling(int velocityX, int velocityY) {
-        ViewPagerLayoutManager layoutManager = (ViewPagerLayoutManager) mRecyclerView.getLayoutManager();
-        if (layoutManager == null) {
+        RecyclerView.LayoutManager viewLayoutManager = mRecyclerView.getLayoutManager();
+        if (viewLayoutManager instanceof ViewPagerLayoutManager) {
+
+        } else {
             return false;
         }
+
+        ViewPagerLayoutManager layoutManager = (ViewPagerLayoutManager) viewLayoutManager;
         RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
         if (adapter == null) {
             return false;
@@ -138,8 +148,8 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
         }
     }
 
-    void snapToCenterView(ViewPagerLayoutManager layoutManager,
-                          ViewPagerLayoutManager.OnPageChangeListener listener) {
+    protected void snapToCenterView(ViewPagerLayoutManager layoutManager,
+                                    ViewPagerLayoutManager.OnPageChangeListener listener) {
         final int delta = layoutManager.getOffsetToCenter();
         if (delta != 0) {
             if (layoutManager.getOrientation()
@@ -161,7 +171,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
     /**
      * Called when an instance of a {@link RecyclerView} is attached.
      */
-    void setupCallbacks() throws IllegalStateException {
+    protected void setupCallbacks() throws IllegalStateException {
         if (mRecyclerView.getOnFlingListener() != null) {
             throw new IllegalStateException("An instance of OnFlingListener already set.");
         }
@@ -172,7 +182,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
     /**
      * Called when the instance of a {@link RecyclerView} is detached.
      */
-    void destroyCallbacks() {
+    protected void destroyCallbacks() {
         mRecyclerView.removeOnScrollListener(mScrollListener);
         mRecyclerView.setOnFlingListener(null);
     }
