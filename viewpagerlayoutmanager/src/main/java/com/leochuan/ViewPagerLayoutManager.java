@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
@@ -650,12 +651,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         return willScroll;
     }
 
-    protected void layoutItems(RecyclerView.Recycler recycler) {
+    protected void layoutItems(@NonNull RecyclerView.Recycler recycler) {
         detachAndScrapAttachedViews(recycler);
         positionCache.clear();
 
         final int itemCount = getItemCount();
         if (itemCount == 0) {
+            removeAndRecycleAllViews(recycler);
             return;
         }
 
@@ -691,6 +693,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
             }
         }
 
+//        for (int i = 0; i < start; i++) {
+//            removeAndRecycleView(recycler, i);
+//        }
+//        for (int i = end; i < itemCount; i++) {
+//            removeAndRecycleView(recycler, i);
+//        }
+
         float lastOrderWeight = Float.MIN_VALUE;
         for (int i = start; i < end; i++) {
             if (useMaxVisibleCount() || !removeCondition(getProperty(i) - mOffset)) {
@@ -725,10 +734,24 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                 }
                 lastOrderWeight = orderWeight;
                 positionCache.put(i, scrap);
+            } else {
+                removeAndRecycleView(recycler, i);
             }
         }
 
+        List<RecyclerView.ViewHolder> scrapList = recycler.getScrapList();
+        for (int i = scrapList.size() - 1; i >= 0; i--) {
+            removeAndRecycleView(scrapList.get(i).itemView, recycler);
+        }
+
         currentFocusView.requestFocus();
+    }
+
+    protected void removeAndRecycleView(@NonNull RecyclerView.Recycler recycler, int i) {
+        final View view = getChildAt(i);
+        if (view != null) {
+            removeAndRecycleView(view, recycler);
+        }
     }
 
     protected boolean useMaxVisibleCount() {
