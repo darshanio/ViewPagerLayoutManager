@@ -862,7 +862,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         return -1;
     }
 
-    protected int getCurrentPositionOffset() {
+    public int getCurrentPositionOffset() {
         if (mInterval == 0) {
             return 0;
         }
