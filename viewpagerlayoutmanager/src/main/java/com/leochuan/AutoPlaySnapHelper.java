@@ -31,6 +31,7 @@ public class AutoPlaySnapHelper extends CenterSnapHelper {
         handler = new Handler(Looper.getMainLooper());
         this.timeInterval = timeInterval;
         this.direction = direction;
+        snapScrollOne = true;
     }
 
     @Override

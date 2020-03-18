@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
@@ -16,17 +17,21 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class CenterSnapHelper extends RecyclerView.OnFlingListener {
 
+    /**
+     * Fling时, 只允许一个一个滚动
+     */
+    public boolean snapScrollOne = false;
     protected RecyclerView mRecyclerView;
     protected Scroller mGravityScroller;
-
     /**
      * when the dataSet is extremely large
      * {@link #snapToCenterView(ViewPagerLayoutManager, ViewPagerLayoutManager.OnPageChangeListener)}
      * may keep calling itself because the accuracy of float
      */
     protected boolean snapToCenter = false;
-
     protected boolean mScrolled = false;
+
+    protected int scrollStartPosition = RecyclerView.NO_POSITION;
 
     // Handles the snap on scroll case.
     protected final RecyclerView.OnScrollListener mScrollListener =
@@ -39,6 +44,12 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
                     RecyclerView.LayoutManager viewLayoutManager = recyclerView.getLayoutManager();
 
                     if (viewLayoutManager instanceof ViewPagerLayoutManager) {
+
+                        if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                            //开始滚动, 记录当前的布局位置
+                            scrollStartPosition = ((ViewPagerLayoutManager) viewLayoutManager).getCurrentPositionOffset();
+                        }
+
                         final ViewPagerLayoutManager layoutManager = (ViewPagerLayoutManager) viewLayoutManager;
                         final ViewPagerLayoutManager.OnPageChangeListener onPageChangeListener =
                                 layoutManager.onPageChangeListener;
@@ -93,23 +104,49 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
         mGravityScroller.fling(0, 0, velocityX, velocityY,
                 Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
+        int currentPosition = scrollStartPosition;
+        if (currentPosition == RecyclerView.NO_POSITION) {
+            currentPosition = layoutManager.getCurrentPositionOffset();
+        }
+
+        int offsetPosition = RecyclerView.NO_POSITION;
+        int targetPosition = RecyclerView.NO_POSITION;
+
         if (layoutManager.mOrientation == ViewPagerLayoutManager.VERTICAL
                 && Math.abs(velocityY) > minFlingVelocity) {
-            final int currentPosition = layoutManager.getCurrentPositionOffset();
-            final int offsetPosition = (int) (mGravityScroller.getFinalY() /
-                    layoutManager.mInterval / layoutManager.getDistanceRatio());
-            ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
-                    -currentPosition - offsetPosition : currentPosition + offsetPosition);
-            return true;
+
+            if (snapScrollOne) {
+                if (velocityY > 0) {
+                    offsetPosition = 1;
+                } else {
+                    offsetPosition = -1;
+                }
+            } else {
+                offsetPosition = (int) (mGravityScroller.getFinalY() /
+                        layoutManager.mInterval / layoutManager.getDistanceRatio());
+            }
+
         } else if (layoutManager.mOrientation == ViewPagerLayoutManager.HORIZONTAL
                 && Math.abs(velocityX) > minFlingVelocity) {
-            final int currentPosition = layoutManager.getCurrentPositionOffset();
-            final int offsetPosition = (int) (mGravityScroller.getFinalX() /
-                    layoutManager.mInterval / layoutManager.getDistanceRatio());
-            ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
-                    -currentPosition - offsetPosition : currentPosition + offsetPosition);
-            return true;
+
+            if (snapScrollOne) {
+                if (velocityX > 0) {
+                    offsetPosition = 1;
+                } else {
+                    offsetPosition = -1;
+                }
+            } else {
+                offsetPosition = (int) (mGravityScroller.getFinalX() /
+                        layoutManager.mInterval / layoutManager.getDistanceRatio());
+            }
         }
+
+        targetPosition = layoutManager.getReverseLayout() ?
+                -currentPosition - offsetPosition : currentPosition + offsetPosition;
+
+        ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, targetPosition);
+
+        Log.i("angcyo", currentPosition + "->" + targetPosition);
 
         return true;
     }
