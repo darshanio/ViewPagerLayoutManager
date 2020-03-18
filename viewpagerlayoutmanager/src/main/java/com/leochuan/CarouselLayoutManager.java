@@ -1,6 +1,7 @@
 package com.leochuan;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 
 /**
@@ -17,6 +18,10 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
     public CarouselLayoutManager(Context context, int itemSpace) {
         this(new Builder(context, itemSpace));
+    }
+
+    public CarouselLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        this(context, 0);
     }
 
     public CarouselLayoutManager(Context context, int itemSpace, int orientation) {

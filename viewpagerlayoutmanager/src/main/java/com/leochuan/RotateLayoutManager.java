@@ -1,6 +1,7 @@
 package com.leochuan;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 
 /**
@@ -18,6 +19,10 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
 
     public RotateLayoutManager(Context context, int itemSpace) {
         this(new Builder(context, itemSpace));
+    }
+
+    public RotateLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        this(context, 0);
     }
 
     public RotateLayoutManager(Context context, int itemSpace, int orientation) {

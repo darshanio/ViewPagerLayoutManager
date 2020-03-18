@@ -1,6 +1,7 @@
 package com.leochuan;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 
 /**
@@ -22,6 +23,10 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
     public GalleryLayoutManager(Context context, int itemSpace) {
         this(new Builder(context, itemSpace));
+    }
+
+    public GalleryLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        this(context, 0);
     }
 
     public GalleryLayoutManager(Context context, int itemSpace, int orientation) {

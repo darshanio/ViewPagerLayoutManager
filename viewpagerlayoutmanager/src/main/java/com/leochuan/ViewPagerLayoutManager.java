@@ -3,6 +3,7 @@ package com.leochuan;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,6 +123,10 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      */
     public ViewPagerLayoutManager(Context context) {
         this(context, HORIZONTAL, false);
+    }
+
+    public ViewPagerLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        this(context);
     }
 
     /**

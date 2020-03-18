@@ -1,6 +1,7 @@
 package com.leochuan;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 
 import static com.leochuan.CircleLayoutManager.CENTER_ON_TOP;
@@ -26,6 +27,10 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     public ScaleLayoutManager(Context context, int itemSpace) {
         this(new Builder(context, itemSpace));
+    }
+
+    public ScaleLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        this(context, 0);
     }
 
     public ScaleLayoutManager(Context context, int itemSpace, int orientation) {

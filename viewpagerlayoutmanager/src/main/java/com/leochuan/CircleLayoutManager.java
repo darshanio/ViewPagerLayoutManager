@@ -1,6 +1,7 @@
 package com.leochuan;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 
 /**
@@ -43,6 +44,10 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     public CircleLayoutManager(Context context) {
         this(new Builder(context));
+    }
+
+    public CircleLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        this(context);
     }
 
     public CircleLayoutManager(Context context, boolean reverseLayout) {
