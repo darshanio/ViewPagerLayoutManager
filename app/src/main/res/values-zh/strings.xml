@@ -6,6 +6,7 @@
     <string name="carousel_layout_manager">Carousel LayoutManager</string>
     <string name="gallery_layout_manager">Gallery LayoutManager</string>
     <string name="rotate_layout_manager">Rotate LayoutManager</string>
+    <string name="full_item_layout_manager">Scale LayoutManager(Full Item)</string>
     <string name="scale_layout_manager">Scale LayoutManager</string>
 
     <string name="radius">半径</string>

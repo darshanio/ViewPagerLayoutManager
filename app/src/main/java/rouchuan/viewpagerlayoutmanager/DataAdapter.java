@@ -14,19 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
-    public interface OnItemClickListener {
-        void onItemClick(View v, int pos);
-    }
 
+    public int itemLayoutId = R.layout.item_image;
+    public OnItemClickListener onItemClickListener;
     private int[] images = {R.drawable.item1, R.drawable.item2, R.drawable.item3,
             R.drawable.item4, R.drawable.item5, R.drawable.item6, R.drawable.item7,
             R.drawable.item8, R.drawable.item9, R.drawable.item10};
 
-    public OnItemClickListener onItemClickListener;
-
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemLayoutId, parent, false));
     }
 
     @Override
@@ -48,7 +45,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @Override
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        Log.i("angyco", "detach:" + holder.getAdapterPosition());
+        Log.w("angyco", "detach:" + holder.getAdapterPosition());
     }
 
     @Override
@@ -60,6 +57,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         Log.i("angyco", "attach:" + holder.getAdapterPosition());
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View v, int pos);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -77,9 +82,5 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 }
             });
         }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
     }
 }

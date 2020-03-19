@@ -25,6 +25,9 @@
             android:name=".scale.ScaleLayoutActivity"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".scale.ScaleFullItemLayoutActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".gallery.GalleryLayoutActivity"
             android:parentActivityName=".MainActivity" />
         <activity

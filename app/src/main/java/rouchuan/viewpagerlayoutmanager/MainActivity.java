@@ -11,6 +11,7 @@ import rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.circlescale.CircleScaleLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.gallery.GalleryLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.rotate.RotateLayoutActivity;
+import rouchuan.viewpagerlayoutmanager.scale.ScaleFullItemLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.scale.ScaleLayoutActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt_gallery).setOnClickListener(this);
         findViewById(R.id.bt_rotate).setOnClickListener(this);
         findViewById(R.id.bt_scale).setOnClickListener(this);
-
+        findViewById(R.id.bt_full_item).setOnClickListener(this);
     }
 
     @Override
@@ -49,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_scale:
                 startActivity(ScaleLayoutActivity.class, v);
+                break;
+            case R.id.bt_full_item:
+                startActivity(ScaleFullItemLayoutActivity.class, v);
+                break;
+            default:
                 break;
         }
     }
