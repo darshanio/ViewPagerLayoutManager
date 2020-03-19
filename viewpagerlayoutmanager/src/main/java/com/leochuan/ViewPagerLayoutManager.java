@@ -751,8 +751,8 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                 lastOrderWeight = orderWeight;
                 positionCache.put(i, scrap);
             } else {
-                positionCache.put(i, null);
-                removeAndRecycleView(recycler, i);
+                //positionCache.put(i, null);
+                //removeAndRecycleView(recycler, i);
             }
         }
 
