@@ -8,6 +8,7 @@
     <string name="rotate_layout_manager">Rotate LayoutManager</string>
     <string name="scale_layout_manager">Scale LayoutManager</string>
     <string name="full_item_layout_manager">Scale LayoutManager(Full Item)</string>
+    <string name="force_item_layout_manager">Scale LayoutManager(Force Item)</string>
 
     <string name="radius">Radius</string>
     <string name="item_space">Item Space</string>
