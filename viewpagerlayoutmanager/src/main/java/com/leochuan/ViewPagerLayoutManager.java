@@ -67,6 +67,10 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     protected float mInterval; //the mInterval of each item's mOffset
     protected OnPageChangeListener onPageChangeListener;
     /**
+     * 是否是全屏的item, 会影响左右item的个数
+     */
+    protected boolean isFullItem = false;
+    /**
      * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}
      */
     int mOrientation;
@@ -93,27 +97,19 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     private int mPendingScrollPosition = NO_POSITION;
     private SavedState mPendingSavedState = null;
     private boolean mRecycleChildrenOnDetach;
-
     private boolean mInfinite = false;
-
     private boolean mEnableBringCenterToFront;
-
     private int mLeftItems;
-
     private int mRightItems;
-
     /**
      * max visible item count
      */
     private int mMaxVisibleItemCount = DETERMINE_BY_MAX_AND_MIN;
-
     private Interpolator mSmoothScrollInterpolator;
-
     /**
      * 与底部的距离, 默认居中
      */
     private int mDistanceToBottom = INVALID_SIZE;
-
     /**
      * use for handle focus
      */
@@ -406,8 +402,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         mInterval = getInterval();
         setUpOnLayout();
 
-        if ((getOrientation() == VERTICAL && mInterval == getHeight() - getPaddingTop() - getPaddingBottom()) ||
-                (getOrientation() == HORIZONTAL && mInterval == getWidth() - getPaddingLeft() - getPaddingRight())) {
+        if (isFullItem) {
             mLeftItems = 0;
             mRightItems = 0;
         } else if (mInterval == 0) {
@@ -699,7 +694,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
 
         float lastOrderWeight = Float.MIN_VALUE;
-        for (int i = start; i < end; i++) {
+        for (int i = start; i <= end; i++) {
             if (useMaxVisibleCount() || !removeCondition(getProperty(i) - mOffset)) {
                 // start and end base on current position,
                 // so we need to calculate the adapter position
@@ -948,6 +943,19 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
         mInfinite = enable;
         requestLayout();
+    }
+
+    public void setFullItem(boolean fullItem) {
+        assertNotInLayoutOrScroll(null);
+        if (isFullItem == fullItem) {
+            return;
+        }
+        isFullItem = fullItem;
+        requestLayout();
+    }
+
+    public boolean isFullItem() {
+        return isFullItem;
     }
 
     public int getDistanceToBottom() {
