@@ -377,56 +377,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
     }
 
-    @Override
-    public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        if (state.getItemCount() == 0) {
-            removeAndRecycleAllViews(recycler);
-            mOffset = 0;
-            return;
-        }
-
-        ensureLayoutState();
-        resolveShouldLayoutReverse();
-
-        //make sure properties are correct while measure more than once
-        View scrap = getMeasureView(recycler, state, 0);
-        if (scrap == null) {
-            removeAndRecycleAllViews(recycler);
-            mOffset = 0;
-            return;
-        }
-
-        measureChildWithMargins(scrap, 0, 0);
-        calChildSpaceAndSpace(scrap);
-
-        mInterval = getInterval();
-        setUpOnLayout();
-
-        if (isFullItem) {
-            mLeftItems = 0;
-            mRightItems = 0;
-        } else if (mInterval == 0) {
-            mLeftItems = 1;
-            mRightItems = 1;
-        } else {
-            mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
-            mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
-        }
-
-        if (mPendingSavedState != null) {
-            mShouldReverseLayout = mPendingSavedState.isReverseLayout;
-            mPendingScrollPosition = mPendingSavedState.position;
-            mOffset = mPendingSavedState.offset;
-        }
-
-        if (mPendingScrollPosition != NO_POSITION) {
-            mOffset = mShouldReverseLayout ?
-                    mPendingScrollPosition * -mInterval : mPendingScrollPosition * mInterval;
-        }
-
-        layoutItems(recycler);
-    }
-
     private void calChildSpaceAndSpace(View scrap) {
         mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
         mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
@@ -447,13 +397,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         } catch (Exception e) {
             return getMeasureView(recycler, state, index + 1);
         }
-    }
-
-    @Override
-    public void onLayoutCompleted(RecyclerView.State state) {
-        super.onLayoutCompleted(state);
-        mPendingSavedState = null;
-        mPendingScrollPosition = NO_POSITION;
     }
 
     @Override
@@ -606,6 +549,63 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     @Override
+    public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (state.getItemCount() == 0) {
+            removeAndRecycleAllViews(recycler);
+            mOffset = 0;
+            return;
+        }
+
+        ensureLayoutState();
+        resolveShouldLayoutReverse();
+
+        //make sure properties are correct while measure more than once
+        View scrap = getMeasureView(recycler, state, 0);
+        if (scrap == null) {
+            removeAndRecycleAllViews(recycler);
+            mOffset = 0;
+            return;
+        }
+
+        measureChildWithMargins(scrap, 0, 0);
+        calChildSpaceAndSpace(scrap);
+
+        mInterval = getInterval();
+        setUpOnLayout();
+
+        if (isFullItem) {
+            mLeftItems = 1;
+            mRightItems = 1;
+        } else if (mInterval == 0) {
+            mLeftItems = 1;
+            mRightItems = 1;
+        } else {
+            mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
+            mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
+        }
+
+        if (mPendingSavedState != null) {
+            mShouldReverseLayout = mPendingSavedState.isReverseLayout;
+            mPendingScrollPosition = mPendingSavedState.position;
+            mOffset = mPendingSavedState.offset;
+        }
+
+        if (mPendingScrollPosition != NO_POSITION) {
+            mOffset = mShouldReverseLayout ?
+                    mPendingScrollPosition * -mInterval : mPendingScrollPosition * mInterval;
+        }
+
+        layoutItems(recycler);
+    }
+
+    @Override
+    public void onLayoutCompleted(RecyclerView.State state) {
+        super.onLayoutCompleted(state);
+        mPendingSavedState = null;
+        mPendingScrollPosition = NO_POSITION;
+    }
+
+    @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (mOrientation == VERTICAL) {
             return 0;
@@ -728,13 +728,36 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                 lastOrderWeight = orderWeight;
                 positionCache.put(i, scrap);
             } else {
+                positionCache.put(i, null);
                 removeAndRecycleView(recycler, i);
             }
         }
 
         List<RecyclerView.ViewHolder> scrapList = recycler.getScrapList();
         for (int i = scrapList.size() - 1; i >= 0; i--) {
+            positionCache.put(i, null);
             removeAndRecycleView(scrapList.get(i).itemView, recycler);
+        }
+
+        int childCount = getChildCount();
+        for (int i = childCount - 1; i >= 0; i--) {
+            View childAt = getChildAt(i);
+            if (childAt != null) {
+                RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) childAt.getLayoutParams();
+                int left = getDecoratedLeft(childAt) + layoutParams.leftMargin;
+                int top = getDecoratedTop(childAt) + layoutParams.topMargin;
+                int right = getDecoratedRight(childAt) + layoutParams.rightMargin;
+                int bottom = getDecoratedBottom(childAt) + layoutParams.bottomMargin;
+
+                if (left >= getWidth() - getPaddingRight() ||
+                        top >= getHeight() - getPaddingBottom() ||
+                        right <= getPaddingLeft() ||
+                        bottom <= getPaddingTop()) {
+                    //不可见item, 回收
+                    positionCache.put(i, null);
+                    removeAndRecycleView(childAt, recycler);
+                }
+            }
         }
 
         currentFocusView.requestFocus();
@@ -945,6 +968,10 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         requestLayout();
     }
 
+    public boolean isFullItem() {
+        return isFullItem;
+    }
+
     public void setFullItem(boolean fullItem) {
         assertNotInLayoutOrScroll(null);
         if (isFullItem == fullItem) {
@@ -952,10 +979,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
         isFullItem = fullItem;
         requestLayout();
-    }
-
-    public boolean isFullItem() {
-        return isFullItem;
     }
 
     public int getDistanceToBottom() {
