@@ -18,7 +18,6 @@ import java.util.List;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
-
 /**
  * An implementation of {@link RecyclerView.LayoutManager} which behaves like view pager.
  * Please make sure your child view have the same size.
@@ -32,7 +31,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     public static final int HORIZONTAL = OrientationHelper.HORIZONTAL;
 
     public static final int VERTICAL = OrientationHelper.VERTICAL;
-    protected static final int INVALID_SIZE = Integer.MAX_VALUE;
+    public static final int INVALID_SIZE = Integer.MAX_VALUE;
     private static final int DIRECTION_NO_WHERE = -1;
     private static final int DIRECTION_FORWARD = 0;
     private static final int DIRECTION_BACKWARD = 1;
@@ -46,13 +45,21 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     protected int mDecoratedMeasurementInOther;
 
     /**
-     * 左右空隙大小
+     * 左/右空隙大小
      */
     protected int mSpaceMain;
     /**
-     * 上下空隙大小
+     * 强制指定左/右的间隙
+     */
+    protected int forceSpaceMain = INVALID_SIZE;
+    /**
+     * 上/下空隙大小
      */
     protected int mSpaceInOther;
+    /**
+     * 强制指定上/下的间隙
+     */
+    protected int forceSpaceInOther = INVALID_SIZE;
     /**
      * The offset of property which will change while scrolling
      */
@@ -377,14 +384,30 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
     }
 
-    private void calChildSpaceAndSpace(View scrap) {
+    protected int maxSpaceMain() {
+        return (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
+    }
+
+    protected int maxSpaceMainInOther() {
+        if (mDistanceToBottom == INVALID_SIZE) {
+            return (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+        } else {
+            return mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther - mDistanceToBottom;
+        }
+    }
+
+    protected void calChildSpaceAndSpace(View scrap) {
         mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
         mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
-        mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
-        if (mDistanceToBottom == INVALID_SIZE) {
-            mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+        if (forceSpaceMain != INVALID_SIZE) {
+            mSpaceMain = forceSpaceMain;
         } else {
-            mSpaceInOther = mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther - mDistanceToBottom;
+            mSpaceMain = maxSpaceMain();
+        }
+        if (forceSpaceInOther != INVALID_SIZE) {
+            mSpaceInOther = forceSpaceInOther;
+        } else {
+            mSpaceInOther = maxSpaceMainInOther();
         }
     }
 
@@ -788,11 +811,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     protected float getMaxOffset() {
-        return !mShouldReverseLayout ? (getItemCount() - 1) * mInterval : 0;
+        return !mShouldReverseLayout ? (getItemCount()) * mInterval : 0;
     }
 
     protected float getMinOffset() {
-        return !mShouldReverseLayout ? 0 : -(getItemCount() - 1) * mInterval;
+        return !mShouldReverseLayout ? 0 : -(getItemCount()) * mInterval;
     }
 
     protected void layoutScrap(View scrap, float targetOffset) {
@@ -979,6 +1002,33 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
         isFullItem = fullItem;
         requestLayout();
+    }
+
+    public void setForceSpaceMain(int forceSpaceMain) {
+        assertNotInLayoutOrScroll(null);
+        if (this.forceSpaceMain == forceSpaceMain) {
+            return;
+        }
+        this.forceSpaceMain = forceSpaceMain;
+
+        requestLayout();
+    }
+
+    public void setForceSpaceInOther(int forceSpaceInOther) {
+        assertNotInLayoutOrScroll(null);
+        if (this.forceSpaceInOther == forceSpaceInOther) {
+            return;
+        }
+        this.forceSpaceInOther = forceSpaceInOther;
+        requestLayout();
+    }
+
+    public int getForceSpaceMain() {
+        return forceSpaceMain;
+    }
+
+    public int getForceSpaceInOther() {
+        return forceSpaceInOther;
     }
 
     public int getDistanceToBottom() {
