@@ -717,7 +717,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
 
         float lastOrderWeight = Float.MIN_VALUE;
-        for (int i = start; i <= end; i++) {
+        for (int i = start; i < end; i++) {
             if (useMaxVisibleCount() || !removeCondition(getProperty(i) - mOffset)) {
                 // start and end base on current position,
                 // so we need to calculate the adapter position
@@ -811,11 +811,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     protected float getMaxOffset() {
-        return !mShouldReverseLayout ? (getItemCount()) * mInterval : 0;
+        return !mShouldReverseLayout ? (getItemCount() - 1) * mInterval : 0;
     }
 
     protected float getMinOffset() {
-        return !mShouldReverseLayout ? 0 : -(getItemCount()) * mInterval;
+        return !mShouldReverseLayout ? 0 : -(getItemCount() - 1) * mInterval;
     }
 
     protected void layoutScrap(View scrap, float targetOffset) {
@@ -1004,6 +1004,10 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         requestLayout();
     }
 
+    public int getForceSpaceMain() {
+        return forceSpaceMain;
+    }
+
     public void setForceSpaceMain(int forceSpaceMain) {
         assertNotInLayoutOrScroll(null);
         if (this.forceSpaceMain == forceSpaceMain) {
@@ -1014,6 +1018,10 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         requestLayout();
     }
 
+    public int getForceSpaceInOther() {
+        return forceSpaceInOther;
+    }
+
     public void setForceSpaceInOther(int forceSpaceInOther) {
         assertNotInLayoutOrScroll(null);
         if (this.forceSpaceInOther == forceSpaceInOther) {
@@ -1021,14 +1029,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
         this.forceSpaceInOther = forceSpaceInOther;
         requestLayout();
-    }
-
-    public int getForceSpaceMain() {
-        return forceSpaceMain;
-    }
-
-    public int getForceSpaceInOther() {
-        return forceSpaceInOther;
     }
 
     public int getDistanceToBottom() {
