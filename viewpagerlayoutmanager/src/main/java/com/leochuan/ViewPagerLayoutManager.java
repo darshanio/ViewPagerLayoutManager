@@ -122,6 +122,9 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      */
     private View currentFocusView;
 
+    /**是否激活滚动*/
+    protected boolean enableScroll = true;
+
     /**
      * Creates a horizontal ViewPagerLayoutManager
      */
@@ -236,7 +239,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      */
     @Override
     public boolean canScrollHorizontally() {
-        return mOrientation == HORIZONTAL;
+        return mOrientation == HORIZONTAL && enableScroll;
     }
 
     /**
@@ -244,7 +247,15 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      */
     @Override
     public boolean canScrollVertically() {
-        return mOrientation == VERTICAL;
+        return mOrientation == VERTICAL && enableScroll;
+    }
+
+    public boolean isEnableScroll() {
+        return enableScroll;
+    }
+
+    public void setEnableScroll(boolean enableScroll) {
+        this.enableScroll = enableScroll;
     }
 
     /**
